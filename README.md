@@ -7,7 +7,7 @@
 ## Features not included 
 Max, min values - need clarification  
 
-## HOW build project localy 
+## How to build project localy 
 1) Run npm install or yarn install 
 2) Run npm start 
 
