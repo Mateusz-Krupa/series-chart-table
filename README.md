@@ -1,4 +1,15 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Features included 
+1) normalization 
+2) Date Rage filters - graph + table 
+3) Legend filter - graph + table  
+
+## Features not included 
+Max, min values - need clarification  
+
+## HOW build project localy 
+1) Run npm install or yarn install 
+2) Run npm start 
 
 ## Available Scripts
 
