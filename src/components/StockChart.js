@@ -1,73 +1,86 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Highcharts from 'highcharts/highstock'
+import PropTypes from 'prop-types';
 import HighchartsReact from 'highcharts-react-official'
 
+export default class StockChart extends PureComponent {
 
-const StockChart = ({ loading, data }) => {
-
-  if (loading) return null;
-
-  const normalizeInput = (value, firstValue) => {
-    return value / firstValue * 100
-  }
-
-  const series = data.map((item, index) => {
-    const entries = item.timeSeries.entries;
-    const firstValue = entries[0].v
-    return (
-      {
-        name: item.instrumentId,
-        data: entries.map(item => ([new Date(item.d), normalizeInput(item.v, firstValue)]))
-      })
-  })
-
-
-  const config = {
-    rangeSelector: {
-      inputEnabled: true
-    },
-    legend: {
-      enabled: true,
-      title: {
-        style: { "fontWeight": "bold" },
-        text: "Legend"
-      }
-    },
-    tooltip: {
-      enabled: false,
-    },
-    title: {
-      text: 'Instruments Dataset'
-    },
-    yAxis: {
-      labels: {
-        formatter: function () {
-          return this.value + "%";
+  render() {
+    const { data, title, onGraphUpdate } = this.props;
+    const config = {
+      rangeSelector: {
+        inputEnabled: true
+      },
+      legend: {
+        enabled: true,
+        title: {
+          style: { "fontWeight": "bold" },
+          text: "Legend"
         }
       },
-    },
-    xAxis: {
-      type: "datetime",
-      dateTimeLabelFormats: {
-        month: '%b %e, %Y'
+      tooltip: {
+        enabled: false,
+      },
+      title: {
+        text: title,
+      },
+      yAxis: {
+        labels: {
+          formatter: function () {
+            return this.value + "%";
+          }
+        },
+      },
+      xAxis: {
+        type: "datetime",
+        dateTimeLabelFormats: {
+          month: '%b %e, %Y'
+        }
+      },
+      series: data,
+
+      plotOptions: {
+        series: {
+          events: {
+            legendItemClick: (e) => {
+            }
+          },
+        }
+      },
+
+      chart: {
+        marginBottom: 100,
+        events: {
+          render: (e) => {
+            const series = e.target.series;
+            const graphData = []
+            series.forEach((item, index) => {
+              if (index !== series.length - 1 && item.visible) {
+                graphData.push({
+                  name: item.name,
+                  dates: item.processedXData,
+                  values: item.processedYData
+                })
+              }
+            })
+            onGraphUpdate(graphData)
+          }
+        },
       }
-    },
-    series: series,
-    chart: {
-      marginBottom: 100
-    },
-  };
+    };
 
-  return (
-    <HighchartsReact
-      ref={(chart) => this.chart = chart}
-      highcharts={Highcharts}
-      constructorType={'stockChart'}
-      options={config}
-      callback={this.chartCallback}
-    />
-  );
-}
+    return (
+      <HighchartsReact
+        highcharts={Highcharts}
+        constructorType={'stockChart'}
+        options={config}
+      />
+    );
+  }
 }
 
-export default StockChart;
+StockChart.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  title: PropTypes.string.isRequired,
+  onGraphUpdate: PropTypes.func.isRequired,
+}
