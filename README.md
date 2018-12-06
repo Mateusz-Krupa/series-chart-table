@@ -1,12 +1,4 @@
 
-## Features included 
-1) normalization 
-2) Date Rage filters - graph + table 
-3) Legend filter - graph + table  
-
-## Features not included 
-Max, min values - need clarification  
-
 ## How to build project localy 
 1) Run npm install or yarn install 
 2) Run npm start 
