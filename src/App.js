@@ -12,7 +12,8 @@ class App extends Component {
     this.state = {
       graphData: [],
       data: [],
-      graph: {}
+      graph: {},
+      loading: true,
     }
     getInstrumentsData().then(res =>
       this.setState({ data: mapGraphData(res.mktData), loading: false })
@@ -29,18 +30,21 @@ class App extends Component {
   render() {
     const {graphData, data } = this.state;
     return (
-      <div className="App">
-        <div className="content">
-          <StockChart
-            title="Instruments"
-            data={data}
-            onGraphUpdate={this.onGraphUpdate}
-          />
-          { graphData.length > 0 ? <GraphTable graphData={graphData}></GraphTable> : 
-            <p className="no-data"> No Data </p> 
-          }
+        <div className="App">
+          <div className="content">
+          {!this.state.loading ?  
+            <>
+            <StockChart
+              title="Instruments"
+              data={data}
+              onGraphUpdate={this.onGraphUpdate}
+            />
+            { graphData.length > 0 ? <GraphTable graphData={graphData}></GraphTable> : 
+              <p className="no-data"> No Data </p> 
+            }
+            </> : <div className="loading">Loading...</div>}
+          </div>
         </div>
-      </div>
     );
   }
 }
