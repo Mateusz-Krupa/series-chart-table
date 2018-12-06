@@ -33,25 +33,30 @@ class GraphTable extends Component {
     const rows = []
     dates.map((date, index) => {
       const row = []
+      let isEmpty = true;
       row.push(new Date(date).toLocaleDateString())
       graphData.forEach((item, typeIndex) => {
           const value = values[typeIndex][index];
           if((!min || value > min) && (!max || value < max)){
             row.push(`${value && value.toPrecision(4)}%`)
+            isEmpty = false;
+          } else {
+            row.push('-')
           }
         }
       )
-      rows.push(row);
+      !isEmpty && rows.push(row);
     })
-    return rows;
+    return rows
   }
 
   render() {
     const { graphData = [], min, max} = this.props;
     const { page, rowsPerPage } = this.state;
+    const size = graphData.length;
     const values = graphData.map(item => item.values)
     const dates = graphData.map(item => item.dates)[0] || []
-    const rows = this.createRows(dates, graphData, values, min, max).filter(item => item.length > 1) || []
+    const rows = this.createRows(dates, graphData, values, min, max).filter(item => item.length > 1, size) || []
       return (
       <Paper>
         <Table>
