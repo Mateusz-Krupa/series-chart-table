@@ -24,3 +24,7 @@ to get some props like $primary-color $font-color etc.
   font-size: 12px;
   color: #ccc;
 }
+
+.form{
+  margin: 20px 0;
+}

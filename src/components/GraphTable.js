@@ -28,13 +28,31 @@ class GraphTable extends Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
+  //would be nice to put it in a webworker 
+  createRows(dates, graphData, values, min, max){
+    const rows = []
+    dates.map((date, index) => {
+      const row = []
+      row.push(new Date(date).toLocaleDateString())
+      graphData.forEach((item, typeIndex) => {
+          const value = values[typeIndex][index];
+          if((!min || value > min) && (!max || value < max)){
+            row.push(`${value && value.toPrecision(4)}%`)
+          }
+        }
+      )
+      rows.push(row);
+    })
+    return rows;
+  }
+
   render() {
-    const { graphData = [] } = this.props;
+    const { graphData = [], min, max} = this.props;
     const { page, rowsPerPage } = this.state;
     const values = graphData.map(item => item.values)
     const dates = graphData.map(item => item.dates)[0] || []
-
-    return (
+    const rows = this.createRows(dates, graphData, values, min, max).filter(item => item.length > 1) || []
+      return (
       <Paper>
         <Table>
           <TableHead>
@@ -44,18 +62,13 @@ class GraphTable extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dates.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((date, index) =>
-              <TableRow key={date}>
-                <TableCell component="th" scope="row">
-                  {new Date(date).toLocaleDateString()}
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) =>
+              <TableRow key={row[0]}>
+              {row.map((item, index) => 
+                <TableCell key={index} component="th" scope="row">
+                  {item}
                 </TableCell>
-                {
-                  graphData.map((item, typeIndex) =>
-                    <TableCell key={typeIndex} component="th" scope="row">
-                      {`${values[typeIndex][index].toPrecision(4)}%`}
-                    </TableCell>
-                  )
-                }
+              )}
               </TableRow>
             )}
           </TableBody>
@@ -63,7 +76,7 @@ class GraphTable extends Component {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={dates.length}
+          count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           backIconButtonProps={{

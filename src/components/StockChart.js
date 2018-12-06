@@ -6,7 +6,7 @@ import HighchartsReact from 'highcharts-react-official'
 export default class StockChart extends PureComponent {
 
   render() {
-    const { data, title, onGraphUpdate } = this.props;
+    const { data, title, onGraphUpdate, min, max } = this.props;
     const config = {
       rangeSelector: {
         inputEnabled: true
@@ -30,6 +30,8 @@ export default class StockChart extends PureComponent {
             return this.value + "%";
           }
         },
+        min: min, 
+        max: max
       },
       xAxis: {
         type: "datetime",
@@ -54,6 +56,8 @@ export default class StockChart extends PureComponent {
           render: (e) => {
             const series = e.target.series;
             const graphData = []
+
+
             series.forEach((item, index) => {
               if (index !== series.length - 1 && item.visible) {
                 graphData.push({

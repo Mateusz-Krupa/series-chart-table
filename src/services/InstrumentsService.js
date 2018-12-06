@@ -3,7 +3,7 @@ const getInstrumentsData = async () => {
 }
 
 const normalizeInput = (value, firstValue) => {
-  return value / firstValue * 100
+  return (value / firstValue * 100)
 }
 
 const mapGraphData = (data) =>  
@@ -13,8 +13,9 @@ const mapGraphData = (data) =>
     return (
       {
         name: item.instrumentId,
-        data: entries.map(item => ([new Date(item.d), normalizeInput(item.v, firstValue)]))
+        data: entries.map(item => ([new Date(item.d).getTime(), normalizeInput(item.v, firstValue)]))
     })
+
 })
 
 export { getInstrumentsData, mapGraphData, normalizeInput}
