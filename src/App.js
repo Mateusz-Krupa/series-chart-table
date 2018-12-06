@@ -61,8 +61,8 @@ class App extends Component {
               title="Instruments"
               data={data}
               onGraphUpdate={this.onGraphUpdate}
-              min={min}
-              max={max}
+              min={min ? min : undefined}
+              max={max ? max : undefined}
             />
             <form className="form">
               <p> Please provide values for y-axis </p>
