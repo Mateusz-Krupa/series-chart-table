@@ -12,7 +12,6 @@ Max, min values - need clarification
 2) Run npm start 
 
 ## Available Scripts
-
 In the project directory, you can run:
 
 ### `npm start`
@@ -36,5 +35,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 
 ### `Demo`
-
 [demo](http://mateuszk.noads.biz)
+
+### Knowns issues 
+* The graphs is not updated after narrowowing the time line (without moving the sliden) - re-render event issue
